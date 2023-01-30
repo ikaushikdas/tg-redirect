@@ -1,9 +1,9 @@
 FROM node:12.14.1-alpine
 WORKDIR /app
-RUN chmod -R ug+rw app
-COPY package-lock.json ./package-lock.json
-COPY package.json ./package.json
+#RUN chmod -R ug+rw app
+COPY package-lock.json /app
+COPY package.json /app
 RUN npm install
+COPY . /app
 EXPOSE 3020
-COPY . .
-CMD npm start
+CMD node index.js
