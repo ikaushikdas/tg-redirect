@@ -1,10 +1,11 @@
-FROM node:latest
-WORKDIR /app
-COPY package.json ./package.json
-#COPY package-lock.json ./package-lock.json
-#RUN npm ci
-RUN npm install
+FROM node:12.14.1-alpine
+
+RUN mkdir -p /home/node/app && chown -R node:node /home/node/app
+
+WORKDIR /home/node/app
+
+USER node
+
 COPY . .
-EXPOSE 3000
-EXPOSE 3020
-CMD npm start
+
+CMD [ "npm", "start" ]
