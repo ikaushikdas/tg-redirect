@@ -1,10 +1,9 @@
-FROM node:12.14.1-alpine
+FROM node:latest
 WORKDIR /app
-#RUN chmod -R ug+rw app
-#COPY package-lock.json /app
-#COPY package.json /app
-COPY . /app
+COPY package.json ./package.json
+#COPY package-lock.json ./package-lock.json
+#RUN npm ci
 RUN npm install
-
-EXPOSE 3020
-CMD node index.js
+COPY . .
+EXPOSE 3000
+CMD npm start
