@@ -8,7 +8,7 @@ pipeline {
     stages{
         stage('preparation') {
             steps {
-                git 'https://github.com/ikaushikdas/example-node-app.git'
+                git 'https://github.com/ikaushikdas/tg-redirect.git'
             }
         }
         // stage('Build Docker Image'){
