@@ -15,7 +15,7 @@ pipeline {
            
             steps{
                 script {
-                dockerImage = docker.build("dotted-journey-374919/example-node-app:${BUILD_NUMBER}")  
+                dockerImage = docker.build("dotted-journey-374919/example-node-app:Latest")  
                 //dockerImage = docker.build("examplenode-app:latest")    
                 }  
 
@@ -39,7 +39,7 @@ pipeline {
            
             steps{
                     //sh 'docker rmi -f 116361412831.dkr.ecr.ap-south-1.amazonaws.com/node-app:latest'
-                    sh 'docker rmi -f ikaushik96/example-node-app:$BUILD_NUMBER'
+                    sh 'docker rmi -f ikaushik96/example-node-app:Latest'
 
                 } 
 
