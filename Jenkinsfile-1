@@ -1,0 +1,49 @@
+pipeline {
+    agent any
+
+    // environment {
+    //     DOCKER_ACCESS_TOKEN = credentials('docker-hub')
+    // }
+
+    stages{
+        stage('preparation') {
+            steps {
+                git 'https://github.com/ikaushikdas/tg-redirect.git'
+            }
+        }
+        stage('Build Docker Image'){
+           
+            steps{
+                script {
+                dockerImage = docker.build("dotted-journey-374919/example-node-app:${BUILD_NUMBER}")  
+                //dockerImage = docker.build("examplenode-app:latest")    
+                }  
+
+            }
+        }
+
+        stage('Publish to GCR'){
+           
+            steps{
+                script {
+                    docker.withRegistry("https://eu.gcr.io", "gcr:Gke-cred") {
+                        dockerImage.push()
+                    }
+                }
+            }  
+
+        }
+        
+        
+        stage('Remove Image'){
+           
+            steps{
+                    //sh 'docker rmi -f 116361412831.dkr.ecr.ap-south-1.amazonaws.com/node-app:latest'
+                    sh 'docker rmi -f ikaushik96/example-node-app:$BUILD_NUMBER'
+
+                } 
+
+        }
+        
+    }
+}
