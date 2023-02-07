@@ -55,10 +55,10 @@ pipeline {
                     //sh("cat ms1/service.yaml | envsubst | kubectl apply -f - ")
                     sh "sed -i  's/tagversion/${BUILD_NUMBER}/g' ./k8/deployment.yaml"
                     //sh "cat ./k8/deployment.yaml "
-                    sh "pwd"
-                    sh "ls -ltr"
-                    //sh "kubectl apply -f ./k8/deployment.yaml"
-                    //sh "kubectl apply -f ./k8/ingress.yaml"
+                    //sh "pwd"
+                    //sh "ls -ltr"
+                    sh "kubectl apply -f ./k8/deployment.yaml"
+                    sh "kubectl apply -f ./k8/ingress.yml"
                 }
                 
 
@@ -87,7 +87,7 @@ pipeline {
            
             steps{
                     //sh 'docker rmi -f 116361412831.dkr.ecr.ap-south-1.amazonaws.com/node-app:latest'
-                    sh 'docker rmi -f ikaushik96/example-node-app:$BUILD_NUMBER'
+                    sh 'docker rmi -f dotted-journey-374919/example-node-app:${BUILD_NUMBER}'
 
                 } 
 
