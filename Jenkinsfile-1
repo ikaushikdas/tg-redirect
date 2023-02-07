@@ -54,9 +54,11 @@ pipeline {
                     //sh("cat ms1/deployment.yaml | envsubst | kubectl apply -f - ")
                     //sh("cat ms1/service.yaml | envsubst | kubectl apply -f - ")
                     sh "sed -i  's/tagversion/${BUILD_NUMBER}/g' ./k8/deployment.yaml"
-                    sh "cat ./k8/deployment.yaml "
-                    sh "kubectl apply -f ./k8/deployment.yaml"
-                    sh "kubectl apply -f ./k8/ingress.yaml"
+                    //sh "cat ./k8/deployment.yaml "
+                    sh "pwd"
+                    sh "ls -ltr"
+                    //sh "kubectl apply -f ./k8/deployment.yaml"
+                    //sh "kubectl apply -f ./k8/ingress.yaml"
                 }
                 
 
