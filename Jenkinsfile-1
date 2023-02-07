@@ -44,34 +44,37 @@ pipeline {
         stage('Deploy to GKE'){
            
             steps{
-                // withCredentials([file(credentialsId: 'Gke-cred', variable: 'GC_KEY')]) {
-                //     // sh("""  gcloud auth activate-service-account --key-file="${GC_KEY}" && \
-                //     //         gcloud config set project "${PROJECT_ID}" && \
-                //     //         gcloud config set container/cluster "${CLUSTER_NAME}" && \
-                //     //         gcloud config set compute/zone "${LOCATION}" && \
-                //     //         gcloud container clusters get-credentials "${CLUSTER_NAME}" --zone "${LOCATION}" 
-                //     //     """)
-                //     // sh("cat ms1/deployment.yaml | envsubst | kubectl apply -f - ")
-                //     // sh("cat ms1/service.yaml | envsubst | kubectl apply -f - ")
-                // }
-                sh "sed -i  's/tagversion/${BUILD_NUMBER}/g' ./k8/deployment.yaml"
-                sh "cat ./k8/deployment.yaml "
+                withCredentials([file(credentialsId: 'GKE-new-Cred', variable: 'GC_KEY')]) {
+                    sh("""  gcloud auth activate-service-account --key-file="${GC_KEY}" && \
+                            gcloud config set project "${PROJECT_ID}" && \
+                            gcloud config set container/cluster "${CLUSTER_NAME}" && \
+                            gcloud config set compute/zone "${LOCATION}" && \
+                            gcloud container clusters get-credentials "${CLUSTER_NAME}" --zone "${LOCATION}" 
+                        """)
+                    //sh("cat ms1/deployment.yaml | envsubst | kubectl apply -f - ")
+                    //sh("cat ms1/service.yaml | envsubst | kubectl apply -f - ")
+                    sh "sed -i  's/tagversion/${BUILD_NUMBER}/g' ./k8/deployment.yaml"
+                    sh "cat ./k8/deployment.yaml "
+                    sh "kubectl apply -f ./k8/deployment.yaml"
+                    sh "kubectl apply -f ./k8/ingress.yaml"
+                }
+                
 
-                    step([$class: 'KubernetesEngineBuilder',
-                     projectId: env.PROJECT_ID,
-                     clusterName: env.CLUSTER_NAME,
-                     zone: env.LOCATION,
-                     manifestPattern: './k8/deployment.yaml',
-                     credentialsId: env.CREDENTIALS_ID,
-                     verifyDeployments: true])
+                    // step([$class: 'KubernetesEngineBuilder',
+                    //  projectId: env.PROJECT_ID,
+                    //  clusterName: env.CLUSTER_NAME,
+                    //  zone: env.LOCATION,
+                    //  manifestPattern: './k8/deployment.yaml',
+                    //  credentialsId: env.CREDENTIALS_ID,
+                    //  verifyDeployments: true])
 
-                    step([$class: 'KubernetesEngineBuilder',
-                     projectId: env.PROJECT_ID,
-                     clusterName: env.CLUSTER_NAME,
-                     zone: env.LOCATION,
-                     manifestPattern: './k8/ingress.yml',
-                     credentialsId: env.CREDENTIALS_ID,
-                     verifyDeployments: true])
+                    // step([$class: 'KubernetesEngineBuilder',
+                    //  projectId: env.PROJECT_ID,
+                    //  clusterName: env.CLUSTER_NAME,
+                    //  zone: env.LOCATION,
+                    //  manifestPattern: './k8/ingress.yml',
+                    //  credentialsId: env.CREDENTIALS_ID,
+                    //  verifyDeployments: true])
                 
             }  
 
