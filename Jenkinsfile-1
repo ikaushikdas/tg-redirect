@@ -4,6 +4,13 @@ pipeline {
     // environment {
     //     DOCKER_ACCESS_TOKEN = credentials('docker-hub')
     // }
+    environment {
+        PROJECT_ID = 'dotted-journey-374919'
+        CLUSTER_NAME = 'k8-cluster'
+        LOCATION = 'us-central1-c'
+        CREDENTIALS_ID = 'Gke-cred'
+        NAMESPACE = 'default'
+    }
 
     stages{
         stage('preparation') {
@@ -15,7 +22,7 @@ pipeline {
            
             steps{
                 script {
-                dockerImage = docker.build("dotted-journey-374919/example-node-app:Latest")  
+                dockerImage = docker.build("dotted-journey-374919/example-node-app:${BUILD_NUMBER}")  
                 //dockerImage = docker.build("examplenode-app:latest")    
                 }  
 
@@ -33,13 +40,33 @@ pipeline {
             }  
 
         }
+
+        stage('Deploy to GKE'){
+           
+            steps{
+                withCredentials([file(credentialsId: 'Gke-cred', variable: 'GC_KEY')]) {
+                    sh("""  gcloud auth activate-service-account --key-file="${GC_KEY}" && \
+                            gcloud config set project "${PROJECT_ID}" && \
+                            gcloud config set container/cluster "${CLUSTER_NAME}" && \
+                            gcloud config set compute/zone "${LOCATION}" && \
+                            gcloud container clusters get-credentials "${CLUSTER_NAME}" --zone "${LOCATION}" 
+                        """)
+                    // sh("cat ms1/deployment.yaml | envsubst | kubectl apply -f - ")
+                    // sh("cat ms1/service.yaml | envsubst | kubectl apply -f - ")
+                    sh "sed -i  's/tagversion/${BUILD_NUMBER}/g' k8/deployment.yaml"
+                    sh "kubectl apply -f k8/ingress.yaml"
+                    sh "kubectl apply -f k8/deployment.yaml"
+                }
+            }  
+
+        }
         
         
         stage('Remove Image'){
            
             steps{
                     //sh 'docker rmi -f 116361412831.dkr.ecr.ap-south-1.amazonaws.com/node-app:latest'
-                    sh 'docker rmi -f ikaushik96/example-node-app:Latest'
+                    sh 'docker rmi -f ikaushik96/example-node-app:$BUILD_NUMBER'
 
                 } 
 

@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels: 
+    app: tg-redirect
+  name: tg-redirect
+  namespace: default
+spec:
+  replicas: 2
+  minReadySeconds: 45
+  selector:
+    matchLabels:
+      app: tg-redirect
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: tg-redirect
+    spec:
+      containers:
+      - image: eu.gcr.io/dotted-journey-374919/example-node-app:tagversion
+        imagePullPolicy: IfNotPresent
+        name: tg-redirect
+        # env:
+        #   - name: CURRENCY_EXCHANGE_SERVICE_HOST
+        #     #value: http://currency-exchange
+        #     valueFrom:
+        #       configMapKeyRef:
+        #         key: CURRENCY_EXCHANGE_SERVICE_HOST
+        #         name: currency-conversion-config-map
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 30
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: tg-redirect
+  name: tg-redirect
+  namespace: default
+spec:
+  ports:
+  - port: 3020
+    protocol: TCP
+    targetPort: 3020
+  selector:
+    app: tg-redirect
+  sessionAffinity: None
+  type: NodePort

@@ -1,0 +1,25 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: gateway-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  #ingressClassName: nginx-example
+  rules:
+  - http:
+      paths:
+      - path: /tg-redirect/
+        pathType: Prefix
+        backend:
+          service:
+            name: tg-redirect
+            port:
+              number: 3020
+      # - path: /currency-conversion/
+      #   pathType: Prefix
+      #   backend:
+      #     service:
+      #       name: currency-conversion
+      #       port:
+      #         number: 8100
