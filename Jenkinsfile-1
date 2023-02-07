@@ -8,7 +8,7 @@ pipeline {
         PROJECT_ID = 'dotted-journey-374919'
         CLUSTER_NAME = 'k8-cluster'
         LOCATION = 'us-central1-c'
-        CREDENTIALS_ID = 'Gke-cred'
+        CREDENTIALS_ID = 'GKE-new-Cred'
         NAMESPACE = 'default'
     }
 
@@ -33,7 +33,7 @@ pipeline {
            
             steps{
                 script {
-                    docker.withRegistry("https://eu.gcr.io", "gcr:Gke-cred") {
+                    docker.withRegistry("https://eu.gcr.io", "gcr:GKE-new-Cred") {
                         dockerImage.push()
                     }
                 }
