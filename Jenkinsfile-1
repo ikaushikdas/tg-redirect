@@ -54,9 +54,10 @@ pipeline {
                 //     // sh("cat ms1/deployment.yaml | envsubst | kubectl apply -f - ")
                 //     // sh("cat ms1/service.yaml | envsubst | kubectl apply -f - ")
                 // }
-                sh "sed -i  's/tagversion/${BUILD_NUMBER}/g' k8/deployment.yaml"
-                    step([$class: 'KubernetesEngineBuilder', projectId: env.PROJECT_ID, clusterName: env.CLUSTER_NAME, location: env.LOCATION, manifestPattern: 'ingress.yaml', credentialsId: env.CREDENTIALS_ID, verifyDeployments: true])
-                    step([$class: 'KubernetesEngineBuilder', projectId: env.PROJECT_ID, clusterName: env.CLUSTER_NAME, location: env.LOCATION, manifestPattern: 'deployment.yaml', credentialsId: env.CREDENTIALS_ID, verifyDeployments: true])
+                sh "sed -i  's/tagversion/${BUILD_NUMBER}/g' ./k8/deployment.yaml"
+                sh "cat ./k8/deployment.yaml "
+                    step([$class: 'KubernetesEngineBuilder', projectId: env.PROJECT_ID, clusterName: env.CLUSTER_NAME, location: env.LOCATION, manifestPattern: './k8/ingress.yaml', credentialsId: env.CREDENTIALS_ID, verifyDeployments: true])
+                    step([$class: 'KubernetesEngineBuilder', projectId: env.PROJECT_ID, clusterName: env.CLUSTER_NAME, location: env.LOCATION, manifestPattern: './k8/deployment.yaml', credentialsId: env.CREDENTIALS_ID, verifyDeployments: true])
                 
             }  
 
