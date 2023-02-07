@@ -61,7 +61,7 @@ pipeline {
                      projectId: env.PROJECT_ID,
                      clusterName: env.CLUSTER_NAME,
                      zone: env.LOCATION,
-                     manifestPattern: './k8/ingress.yml',
+                     manifestPattern: './k8/deployment.yaml',
                      credentialsId: env.CREDENTIALS_ID,
                      verifyDeployments: true])
 
@@ -69,7 +69,7 @@ pipeline {
                      projectId: env.PROJECT_ID,
                      clusterName: env.CLUSTER_NAME,
                      zone: env.LOCATION,
-                     manifestPattern: './k8/deployment.yaml',
+                     manifestPattern: './k8/ingress.yml',
                      credentialsId: env.CREDENTIALS_ID,
                      verifyDeployments: true])
                 
