@@ -56,8 +56,22 @@ pipeline {
                 // }
                 sh "sed -i  's/tagversion/${BUILD_NUMBER}/g' ./k8/deployment.yaml"
                 sh "cat ./k8/deployment.yaml "
-                    step([$class: 'KubernetesEngineBuilder', projectId: env.PROJECT_ID, clusterName: env.CLUSTER_NAME, location: env.LOCATION, manifestPattern: './k8/ingress.yml', credentialsId: env.CREDENTIALS_ID, verifyDeployments: true])
-                    step([$class: 'KubernetesEngineBuilder', projectId: env.PROJECT_ID, clusterName: env.CLUSTER_NAME, location: env.LOCATION, manifestPattern: './k8/deployment.yaml', credentialsId: env.CREDENTIALS_ID, verifyDeployments: true])
+
+                    step([$class: 'KubernetesEngineBuilder',
+                     projectId: env.PROJECT_ID,
+                     clusterName: env.CLUSTER_NAME,
+                     zone: env.LOCATION,
+                     manifestPattern: './k8/ingress.yml',
+                     credentialsId: env.CREDENTIALS_ID,
+                     verifyDeployments: true])
+
+                    step([$class: 'KubernetesEngineBuilder',
+                     projectId: env.PROJECT_ID,
+                     clusterName: env.CLUSTER_NAME,
+                     zone: env.LOCATION,
+                     manifestPattern: './k8/deployment.yaml',
+                     credentialsId: env.CREDENTIALS_ID,
+                     verifyDeployments: true])
                 
             }  
 
